@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.models import User
 
 # Create your views here.
 def loginUser(request):
@@ -17,6 +18,71 @@ def loginUser(request):
                 "error": "Invalid username or password"
             })
     return render(request, "login.html")
+
+def registerUser(request):
+
+    if request.method == "POST":
+
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        # password check
+        if password != confirm_password:
+            return render(request, "register.html", {
+                "error": "Passwords do not match"
+            })
+
+        # username already exists
+        if User.objects.filter(username=username).exists():
+            return render(request, "register.html", {
+                "error": "Username already exists"
+            })
+        
+        # password length
+        if len(password) < 8:
+            return render(request, "register.html", {
+                "error": "Password must be at least 8 characters"
+            })
+
+        # uppercase check
+        if not any(char.isupper() for char in password):
+            return render(request, "register.html", {
+                "error": "Password must contain an uppercase letter"
+            })
+
+        # lowercase check
+        if not any(char.islower() for char in password):
+            return render(request, "register.html", {
+                "error": "Password must contain a lowercase letter"
+            })
+
+        # number check
+        if not any(char.isdigit() for char in password):
+            return render(request, "register.html", {
+                "error": "Password must contain a number"
+            })
+
+        # special character check
+        special_characters = "!@#$%^&*()_+-=[]{}|;:',.<>?/"
+
+        if not any(char in special_characters for char in password):
+            return render(request, "register.html", {
+                "error": "Password must contain a special character"
+            })
+
+
+        # create user
+        user = User.objects.create_user(
+            username=username,
+            password=password
+        )
+
+        user.save()
+
+        return redirect("login")
+
+    return render(request, "register.html")
 
 def home(request):
     if request.user.is_anonymous:
