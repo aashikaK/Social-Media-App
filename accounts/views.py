@@ -40,7 +40,7 @@ def registerUser(request):
             })
         
         # password length
-        if len(password) < 8:
+        if len(password) < 6:
             return render(request, "register.html", {
                 "error": "Password must be at least 8 characters"
             })
