@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial,sans-serif;
+            background:#0f172a;
+            color:white;
+        }
+
+        .navbar{
+            background:#1e293b;
+            padding:15px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .logo{
+            font-size:24px;
+            font-weight:bold;
+            color:#60a5fa;
+        }
+
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+        }
+
+        .nav-links a:hover{
+            color:#60a5fa;
+        }
+
+        .container{
+            width:80%;
+            margin:auto;
+            margin-top:40px;
+        }
+
+        .welcome-box{
+            background:#1e293b;
+            padding:25px;
+            border-radius:12px;
+            margin-bottom:25px;
+        }
+
+        .feed-box{
+            background:#1e293b;
+            padding:25px;
+            border-radius:12px;
+        }
+
+        .post{
+            background:#334155;
+            padding:15px;
+            border-radius:10px;
+            margin-top:15px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">
+            MiniSocial 📱
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/logout/">Logout</a>
+
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <div class="welcome-box">
+
+            <h1>
+                Welcome, {{ user.username }} 👋
+            </h1>
+
+            <p>
+                This is your social media homepage.
+            </p>
+
+        </div>
+
+        <div class="feed-box">
+
+            <h2>News Feed 🔥</h2>
+
+            <div class="post">
+                <h3>@john</h3>
+                <p>Hello everyone! This is my first post.</p>
+            </div>
+
+            <div class="post">
+                <h3>@sarah</h3>
+                <p>Learning Django is actually fun 🚀</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

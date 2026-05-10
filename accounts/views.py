@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 
 # Create your views here.
+
+#pw for ak is Ak123@ 
+
 def loginUser(request):
     if request.method == "POST":
         username= request.POST.get("username")
