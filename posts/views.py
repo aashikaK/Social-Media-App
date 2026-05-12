@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def createPost(request):
     if request.method=="POST":
-        content= request.get.POST(content)
+        content= request.POST.get("content")
 
         Post.objects.create(
             user=request.user,
