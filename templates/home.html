@@ -187,7 +187,13 @@
                 <div class="post">
 
                     <h3>
-                        @{{ post.user.username }}
+                       <a
+        href="/profile/{{ post.user.username }}/"
+        style="color:#60a5fa; text-decoration:none;"
+    >
+        @{{ post.user.username }}
+    </a>
+
                     </h3>
 
                     <p>
