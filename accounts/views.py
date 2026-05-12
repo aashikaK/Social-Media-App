@@ -93,9 +93,11 @@ def registerUser(request):
 def home(request):
     if request.user.is_anonymous:
         return redirect("login")
-        posts=Post.objects.all().order_by("-created_at") #- means newest first
+    posts=Post.objects.all().order_by("-created_at") #- means newest first
 
-    return render(request, "home.html")
+    return render(request, "home.html",{
+    "posts":posts
+    })
 
 
 

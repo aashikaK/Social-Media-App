@@ -55,6 +55,31 @@
             background:#1e293b;
             padding:25px;
             border-radius:12px;
+            margin-bottom:25px;
+        }
+
+        textarea{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            resize:none;
+            box-sizing:border-box;
+            outline:none;
+        }
+
+        button{
+            padding:10px 20px;
+            border:none;
+            border-radius:6px;
+            background:#3b82f6;
+            color:white;
+            cursor:pointer;
+            font-size:15px;
+        }
+
+        button:hover{
+            background:#2563eb;
         }
 
         .post{
@@ -62,6 +87,20 @@
             padding:15px;
             border-radius:10px;
             margin-top:15px;
+        }
+
+        .post h3{
+            margin:0;
+            margin-bottom:10px;
+            color:#60a5fa;
+        }
+
+        .post p{
+            margin-bottom:10px;
+        }
+
+        small{
+            color:#cbd5e1;
         }
 
     </style>
@@ -79,13 +118,15 @@
 
             <a href="/">Home</a>
 
-            <a href="logout">Logout</a>
+            <a href="/logout/">Logout</a>
 
         </div>
 
     </div>
 
     <div class="container">
+
+        <!-- Welcome Section -->
 
         <div class="welcome-box">
 
@@ -99,19 +140,64 @@
 
         </div>
 
+
+        <!-- Create Post Section -->
+
+        <div class="feed-box">
+
+            <h2>Create Post ✍️</h2>
+
+            <form method="POST" action="/posts/create/">
+
+                {% csrf_token %}
+
+                <textarea
+                    name="content"
+                    placeholder="What's on your mind?"
+                    rows="4"
+                    required
+                ></textarea>
+
+                <br><br>
+
+                <button type="submit">
+                    Post
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- Feed Section -->
+
         <div class="feed-box">
 
             <h2>News Feed 🔥</h2>
 
-            <div class="post">
-                <h3>@john</h3>
-                <p>Hello everyone! This is my first post.</p>
-            </div>
+            {% for post in posts %}
 
-            <div class="post">
-                <h3>@sarah</h3>
-                <p>Learning Django is actually fun 🚀</p>
-            </div>
+                <div class="post">
+
+                    <h3>
+                        @{{ post.user.username }}
+                    </h3>
+
+                    <p>
+                        {{ post.content }}
+                    </p>
+
+                    <small>
+                        {{ post.created_at }}
+                    </small>
+
+                </div>
+
+            {% empty %}
+
+                <p>No posts yet.</p>
+
+            {% endfor %}
 
         </div>
 
