@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from posts.models import Post
@@ -100,6 +100,13 @@ def home(request):
     })
 
 
+def Profile(request,username):
+    user=get_object_or_404(User, username=username)
+    posts = Post.objects.filter(user=user).order_by("-created_at")
+    return render(request,"profile.html",{
+        "profile_user":user,
+        "posts":posts
+    })
 
 def logoutUser(request):
     logout(request)
