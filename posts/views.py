@@ -12,5 +12,5 @@ def createPost(request):
             user=request.user,
             content=content
         )
-        redirect('home')
-    redirect('home')
+        return redirect('home')
+    return redirect('home')
