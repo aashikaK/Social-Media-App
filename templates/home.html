@@ -131,7 +131,14 @@
         <div class="welcome-box">
 
             <h1>
-                Welcome, {{ user.username }} 👋
+                Welcome, 
+                 <a 
+        href="/profile/{{ user.username }}/"
+        style="color:#60a5fa; text-decoration:none;"
+    >
+        {{ user.username }}
+    </a>
+
             </h1>
 
             <p>
@@ -145,7 +152,7 @@
 
         <div class="feed-box">
 
-            <h2>Create Post ✍️</h2>
+            <h2>Create Post </h2>
 
             <form method="POST" action="/posts/create/">
 
@@ -173,7 +180,7 @@
 
         <div class="feed-box">
 
-            <h2>News Feed 🔥</h2>
+            <h2>News Feed </h2>
 
             {% for post in posts %}
 
