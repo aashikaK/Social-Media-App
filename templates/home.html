@@ -240,6 +240,23 @@
                         </a>
 
                     {% endif %}
+                    <a href="/interactions/like/{{ post.id }}/">
+    ❤️ Like ({{ post.likes.count }})
+</a>
+<form method="POST" action="/interactions/comment/{{ post.id }}/">
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="content"
+        placeholder="Write a comment..."
+        style="width:70%; padding:6px;"
+    >
+
+    <button type="submit">
+        Comment
+    </button>
+</form>
 
                 </div>
 
