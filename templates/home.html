@@ -253,5 +253,22 @@
 
     </div>
 
+    <script>
+    setTimeout(function() {
+        let messages = document.querySelectorAll(".message");
+
+        messages.forEach(msg => {
+            msg.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            msg.style.opacity = "0";
+            msg.style.transform = "translateY(-10px)";
+
+            setTimeout(() => {
+                msg.remove();
+            }, 500);
+        });
+
+    }, 3000);
+</script>
+
 </body>
 </html>
