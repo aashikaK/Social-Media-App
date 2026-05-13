@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from posts.models import Post
-
+from interactions.models import Like
 # Create your views here.
 
 #pw for ak is Ak123@ 
@@ -94,10 +94,12 @@ def home(request):
     if request.user.is_anonymous:
         return redirect("login")
     posts=Post.objects.all().order_by("-created_at") #- means newest first
+    liked_posts = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
 
-    return render(request, "home.html",{
-    "posts":posts
-    })
+    return render(request, "home.html", {
+    "posts": posts,
+    "liked_posts": liked_posts
+})
 
 
 def profile(request,username):
