@@ -100,7 +100,7 @@ def home(request):
     })
 
 
-def Profile(request,username):
+def profile(request,username):
     user=get_object_or_404(User, username=username)
     posts = Post.objects.filter(user=user).order_by("-created_at")
     return render(request,"profile.html",{
