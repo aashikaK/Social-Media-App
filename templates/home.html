@@ -204,6 +204,23 @@
                         {{ post.created_at }}
                     </small>
 
+ {% if request.user == post.user %}
+
+        <br><br>
+
+        <a
+            href="/interactions/delete/{{ post.id }}/"
+            style="
+                color:red;
+                text-decoration:none;
+                font-weight:bold;
+            "
+        >
+            Delete Post
+        </a>
+
+    {% endif %}
+
                 </div>
 
             {% empty %}
