@@ -33,7 +33,8 @@ def registerUser(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
-
+        full_name = request.POST.get("full_name")
+        dob = request.POST.get("dob")
         # password check
         if password != confirm_password:
             return render(request, "register.html", {
@@ -97,7 +98,9 @@ def registerUser(request):
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
+            full_name=full_name,
+            dob=dob
         )
 
         user.save()
