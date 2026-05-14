@@ -30,7 +30,10 @@
             margin-top:10px;
             border-radius:10px;
         }
-
+        a{
+            color:white;
+            text-decoration:none;
+        }
         h1{
             color:#60a5fa;
         }
@@ -42,8 +45,14 @@
 <div class="container">
 
     <div class="box">
+        <a href="{% url "edit_profile" %}">✏️ Edit Profile</a>
 
         <h1>@{{ profile_user.username }}</h1>
+        <p>Full Name: {{ profile.full_name }}</p>
+
+    <p>Date of Birth: {{ profile.dob }}</p>
+
+    <p>Email: {{ profile.user.email }}</p>
 
         <p>Profile Page</p>
 

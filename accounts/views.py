@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from posts.models import Post
+from accounts.models import Profile
 from interactions.models import Like
 # Create your views here.
 
@@ -33,7 +35,7 @@ def registerUser(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
-        full_name = request.POST.get("full_name")
+        fullName = request.POST.get("full_name")
         dob = request.POST.get("dob")
         # password check
         if password != confirm_password:
@@ -99,8 +101,11 @@ def registerUser(request):
             username=username,
             email=email,
             password=password,
-            full_name=full_name,
-            dob=dob
+        )
+        Profile.objects.create(
+        user=user,
+        full_name=fullName,
+        dob=dob
         )
 
         user.save()
@@ -126,9 +131,27 @@ def home(request):
 def profile(request,username):
     user=get_object_or_404(User, username=username)
     posts = Post.objects.filter(user=user).order_by("-created_at")
+    profile=get_object_or_404(Profile,user=user)
     return render(request,"profile.html",{
         "profile_user":user,
+        "profile": profile,
         "posts":posts
+    })
+
+@login_required
+def editProfile(request):
+    profile = request.user.profile
+
+    if request.method == "POST":
+        profile.full_name = request.POST.get("full_name")
+        profile.dob = request.POST.get("dob")
+        profile.bio = request.POST.get("bio")
+        profile.save()
+
+        return redirect("profile", username=request.user.username)
+
+    return render(request, "edit_profile.html", {
+        "profile": profile
     })
 
 def logoutUser(request):

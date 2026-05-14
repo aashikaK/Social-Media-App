@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+</head>
+<body style="background:#0f172a; color:white; font-family:Arial;">
+
+<div style="width:50%; margin:auto; margin-top:50px;">
+
+    <h1>Edit Profile</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="full_name"
+               value="{{ profile.full_name }}"
+               placeholder="Full Name"
+               style="width:100%; padding:10px; margin-bottom:10px;">
+
+        <input type="date" name="dob"
+               value="{{ profile.dob }}"
+               style="width:100%; padding:10px; margin-bottom:10px;">
+
+        <textarea name="bio"
+                  placeholder="Bio"
+                  style="width:100%; padding:10px;">{{ profile.bio }}</textarea>
+
+        <br><br>
+
+        <button type="submit">Save</button>
+    </form>
+
+</div>
+
+</body>
+</html>
