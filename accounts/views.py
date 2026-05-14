@@ -112,4 +112,4 @@ def profile(request,username):
 
 def logoutUser(request):
     logout(request)
-    return redirect("login")
+    return redirect("login/")
