@@ -177,7 +177,7 @@ def forgotPassword(request):
                 })
 
         except:
-            return render(request, "forgot_password.html", {
+            return render(request, "forgotPw.html", {
                 "error": "User not found"
             })
 
@@ -198,7 +198,7 @@ def resetPassword(request, user_id):
                 "error": "Passwords do not match"
             })
 
-        if len(new_password) < 8:
+        if len(new_password) < 6:
             return render(request, "reset_password.html", {
                 "error": "Password too short"
             })
