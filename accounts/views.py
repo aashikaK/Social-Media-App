@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import authenticate,login,logout
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from posts.models import Post
 from interactions.models import Like
@@ -28,6 +30,7 @@ def registerUser(request):
     if request.method == "POST":
 
         username = request.POST.get("username")
+        email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
@@ -42,6 +45,20 @@ def registerUser(request):
             return render(request, "register.html", {
                 "error": "Username already exists"
             })
+        
+        # email validation
+        if User.objects.filter(email=email).exists():
+            return render(request, "register.html", {
+            "error": "Email already exists"
+            })
+        
+        try:
+            validate_email(email)
+
+        except ValidationError:
+            return render(request, "register.html", {
+                "error": "Enter a valid email address"
+                })
         
         # password length
         if len(password) < 6:
@@ -79,6 +96,7 @@ def registerUser(request):
         # create user
         user = User.objects.create_user(
             username=username,
+            email=email,
             password=password
         )
 
