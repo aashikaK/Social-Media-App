@@ -1,0 +1,14 @@
+<h2>Forgot Password</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input name="username" placeholder="Username">
+    <input name="email" placeholder="Email">
+    <input name="full_name" placeholder="Full Name">
+    <input type="date" name="dob">
+
+    <button type="submit">Verify</button>
+</form>
+
+<p style="color:red;">{{ error }}</p>
