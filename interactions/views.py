@@ -38,3 +38,12 @@ def addComment(request,post_id):
         )
         messages.success(request, "Posted the comment successfully.")
     return redirect("home")
+
+@login_required
+def deleteComment(request,comment_id):
+    comment= get_object_or_404(Comment,id=comment_id)
+    if request.user!=comment.user:
+        return redirect("home")
+    comment.delete()
+    messages.success(request, "Comment deleted.")
+    return redirect("home")

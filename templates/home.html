@@ -44,28 +44,20 @@
             margin-top:40px;
         }
 
-        .welcome-box{
+        .welcome-box, .feed-box{
             background:#1e293b;
             padding:25px;
             border-radius:12px;
             margin-bottom:25px;
         }
 
-        .feed-box{
-            background:#1e293b;
-            padding:25px;
-            border-radius:12px;
-            margin-bottom:25px;
-        }
-
-        textarea{
+        textarea, input{
             width:100%;
             padding:12px;
             border:none;
             border-radius:8px;
-            resize:none;
-            box-sizing:border-box;
             outline:none;
+            box-sizing:border-box;
         }
 
         button{
@@ -75,7 +67,6 @@
             background:#3b82f6;
             color:white;
             cursor:pointer;
-            font-size:15px;
         }
 
         button:hover{
@@ -89,25 +80,12 @@
             margin-top:15px;
         }
 
-        .post h3{
-            margin:0;
-            margin-bottom:10px;
-            color:#60a5fa;
-        }
-
-        .post p{
-            margin-bottom:10px;
-        }
-
-        small{
-            color:#cbd5e1;
-        }
-
         .message{
             background:#22c55e;
-            padding:15px;
+            padding:12px;
             border-radius:8px;
-            margin-bottom:20px;
+            margin-bottom:15px;
+            transition:0.4s;
         }
 
     </style>
@@ -115,160 +93,135 @@
 
 <body>
 
-    <div class="navbar">
-        <div class="logo">MiniSocial 📱</div>
+<div class="navbar">
+    <div class="logo">MiniSocial 📱</div>
 
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="{% url "logout" %}">Logout</a>
-        </div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- SUCCESS MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message success-msg">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- WELCOME -->
+    <div class="welcome-box">
+        <h1>
+            Welcome,
+            <a href="/profile/{{ user.username }}/"
+               style="color:#60a5fa; text-decoration:none;">
+                {{ user.username }}
+            </a>
+        </h1>
     </div>
 
-    <div class="container">
+    <!-- CREATE POST -->
+    <div class="feed-box">
+        <h2>Create Post</h2>
 
-        <!-- Messages -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+        <form method="POST" action="/posts/create/">
+            {% csrf_token %}
+            <textarea name="content" placeholder="What's on your mind?" rows="4"></textarea>
+            <br><br>
+            <button type="submit">Post</button>
+        </form>
+    </div>
 
-        <!-- Welcome -->
-        <div class="welcome-box">
-            <h1>
-                Welcome,
-                <a href="/profile/{{ user.username }}/"
-                   style="color:#60a5fa; text-decoration:none;">
-                    {{ user.username }}
+    <!-- FEED -->
+    <div class="feed-box">
+        <h2>News Feed</h2>
+
+        {% for post in posts %}
+
+        <div class="post">
+
+            <h3>@{{ post.user.username }}</h3>
+
+            <p>{{ post.content }}</p>
+
+            <small>{{ post.created_at }}</small>
+
+            <br><br>
+
+            <!-- DELETE POST -->
+            {% if request.user == post.user %}
+                <a href="/interactions/delete/{{ post.id }}/"
+                   onclick="return confirm('Delete this post?')"
+                   style="color:red;">
+                    Delete Post
                 </a>
-            </h1>
-        </div>
+            {% endif %}
 
-        <!-- Create Post -->
-        <div class="feed-box">
+            <br><br>
 
-            <h2>Create Post</h2>
+            <!-- COMMENTS -->
+            <b>Comments</b>
 
-            <form method="POST" action="/posts/create/">
-                {% csrf_token %}
+            {% for comment in post.comments.all %}
 
-                <textarea name="content"
-                          placeholder="What's on your mind?"
-                          rows="4"
-                          required></textarea>
+                <div style="background:#1e293b; padding:8px; margin-top:5px; border-radius:6px;">
 
-                <br><br>
+                    <b style="color:#60a5fa;">
+                        @{{ comment.user.username }}
+                    </b>
 
-                <button type="submit">Post</button>
-            </form>
+                    {{ comment.content }}
 
-        </div>
-
-        <!-- Feed -->
-        <div class="feed-box">
-
-            <h2>News Feed</h2>
-
-            {% for post in posts %}
-
-                <div class="post">
-
-                    <!-- USER -->
-                    <h3>
-                        <a href="/profile/{{ post.user.username }}/"
-                           style="color:#60a5fa; text-decoration:none;">
-                            @{{ post.user.username }}
-                        </a>
-                    </h3>
-
-                    <!-- CONTENT -->
-                    <p>{{ post.content }}</p>
-
-                    <small>{{ post.created_at }}</small>
-
-                    <br><br>
-
-                    <!-- DELETE -->
-                    {% if request.user == post.user %}
-                        <a href="/interactions/delete/{{ post.id }}/"
-                           onclick="return confirm('Delete this post?')"
-                           style="color:red; text-decoration:none; font-weight:bold;">
-                            Delete Post
+                    <!-- ✅ DELETE COMMENT (ONLY OWNER) -->
+                    {% if request.user == comment.user %}
+                        <a href="/interactions/comment/delete/{{ comment.id }}/"
+                           onclick="return confirm('Delete comment?')"
+                           style="color:red; margin-left:10px;">
+                            delete
                         </a>
                     {% endif %}
-
-                    <br><br>
-
-                    <!-- LIKE / UNLIKE -->
-                    {% if post.id in liked_posts %}
-
-                        <form method="POST" action="/interactions/like/{{ post.id }}/">
-                            {% csrf_token %}
-                            <button type="submit">💔 Unlike {{ post.likes.count }}</button>
-                        </form>
-
-                    {% else %}
-
-                        <form method="POST" action="/interactions/like/{{ post.id }}/">
-                            {% csrf_token %}
-                            <button type="submit">❤️ Like {{ post.likes.count }}</button>
-                        </form>
-
-                    {% endif %}
-
-                    <br>
-
-                    <!-- COMMENTS DISPLAY -->
-                    <div style="margin-top:10px; padding-left:10px;">
-
-                        <b style="color:#cbd5e1;">Comments</b>
-
-                        <div style="margin-top:8px;">
-
-                            {% for comment in post.comments.all %}
-
-                                <div style="background:#1e293b; padding:8px; border-radius:6px; margin-bottom:5px;">
-                                    <b style="color:#60a5fa;">
-                                        @{{ comment.user.username }}
-                                    </b>
-                                    {{ comment.content }}
-                                </div>
-
-                            {% empty %}
-
-                                <p style="color:#94a3b8;">No comments yet</p>
-
-                            {% endfor %}
-
-                        </div>
-
-                    </div>
-
-                    <!-- COMMENT FORM -->
-                    <form method="POST" action="/interactions/comment/{{ post.id }}/">
-                        {% csrf_token %}
-
-                        <input type="text"
-                               name="content"
-                               placeholder="Write a comment..."
-                               style="width:70%; padding:6px;">
-
-                        <button type="submit">Comment</button>
-                    </form>
 
                 </div>
 
             {% empty %}
-
-                <p>No posts yet.</p>
-
+                <p>No comments yet</p>
             {% endfor %}
+
+            <!-- COMMENT FORM -->
+            <form method="POST" action="/interactions/comment/{{ post.id }}/">
+                {% csrf_token %}
+                <input type="text" name="content" placeholder="Write comment...">
+                <button type="submit">Comment</button>
+            </form>
 
         </div>
 
+        {% endfor %}
     </div>
+
+</div>
+
+<!-- JS: AUTO REMOVE SUCCESS MESSAGE AFTER 1.5s -->
+<script>
+setTimeout(() => {
+    let msgs = document.querySelectorAll(".success-msg");
+
+    msgs.forEach(m => {
+        m.style.opacity = "0";
+        m.style.transform = "translateY(-10px)";
+
+        setTimeout(() => {
+            m.remove();
+        }, 400);
+
+    });
+
+}, 1500);
+</script>
 
 </body>
 </html>
